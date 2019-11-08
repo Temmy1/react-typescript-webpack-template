@@ -8,6 +8,6 @@ This is a simple tool kit for work with React. You can use it if you don't need 
 
 Starts a local server, hot reload enabled
 
-#### `npm build`
+#### `npm run build`
 
 Builds the app to the `build` folder
