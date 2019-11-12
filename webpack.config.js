@@ -1,23 +1,31 @@
 const path = require("path");
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const devMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
     entry: "./src/index.tsx",
-    mode: "development",
+    // mode: "development",
     watch: true,
     output: {
         path: path.resolve(__dirname, "build"),
-        publicPath: "build",
+        publicPath: "build/",
         filename: "main.js"
     },
     // devtool: "source-map",
     module: {
         rules: [
             {
-                test: /\.scss$/,
+                test: /\.(sc|c)ss$/,
                 use: [
-                    "style-loader",
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                          hmr: process.env.NODE_ENV === 'development',
+                        },
+                    },
+                    // "style-loader",
                     "css-loader",
                     "sass-loader"
                 ]
@@ -54,6 +62,10 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new MiniCssExtractPlugin({
+            filename: devMode ? '[name].css' : '[name].[hash].css',
+            chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+        })
     ]
 };
